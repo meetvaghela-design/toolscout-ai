@@ -2,9 +2,6 @@ import { Search, Menu, X, Moon, Sun } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-// Hum logo ko direct import kar rahe hain kyunki ye root mein hai
-import logoImg from '../../logo.png'; 
-
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
@@ -22,11 +19,12 @@ export function Header() {
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
         
         {/* Logo Section */}
-        <Link to="/" className="flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-3 transition-transform hover:scale-105">
+          {/* Ab ye direct public folder se logo uthayega */}
           <img 
-            src={logoImg} 
+            src="/logo.png" 
             alt="ToolScout Logo" 
-            className="h-10 w-auto object-contain rounded-lg"
+            className="h-10 w-auto object-contain rounded-lg shadow-sm"
           />
           <span className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Tool<span className="text-indigo-600">Scout</span>
@@ -58,7 +56,7 @@ export function Header() {
         </button>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="absolute top-20 left-0 w-full border-b border-slate-200 bg-white p-4 shadow-xl md:hidden dark:border-slate-800 dark:bg-slate-950">
           <nav className="flex flex-col gap-4">
@@ -68,12 +66,6 @@ export function Header() {
             <Link to="/submit" className="text-base font-medium text-indigo-600 dark:text-indigo-400" onClick={() => setIsMenuOpen(false)}>
               Submit Tool
             </Link>
-            <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
-              <span className="text-sm text-slate-500">Switch Theme</span>
-              <button onClick={() => setIsDark(!isDark)} className="p-2">
-                {isDark ? <Sun size={20} /> : <Moon size={20} />}
-              </button>
-            </div>
           </nav>
         </div>
       )}
