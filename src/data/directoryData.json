@@ -1,254 +1,58 @@
 {
   "categories": [
-    {
-      "id": "writing",
-      "name": "Writing",
-      "description": "Blogs, ads, scripts & docs",
-      "icon": "spark"
-    },
-    {
-      "id": "design",
-      "name": "Design",
-      "description": "Branding, mockups & UI",
-      "icon": "pen"
-    },
-    {
-      "id": "video",
-      "name": "Video",
-      "description": "Shorts, reels & edits",
-      "icon": "play"
-    },
-    {
-      "id": "coding",
-      "name": "Coding",
-      "description": "Apps, APIs & automations",
-      "icon": "code"
-    }
+    { "id": "writing", "name": "Writing", "description": "Blogs, ads & scripts", "icon": "spark" },
+    { "id": "design", "name": "Design", "description": "Branding & UI", "icon": "pen" },
+    { "id": "video", "name": "Video", "description": "Edits & Animations", "icon": "play" },
+    { "id": "coding", "name": "Coding", "description": "Apps & APIs", "icon": "code" }
   ],
-  "filters": ["All", "Free", "Freemium", "Paid"],
   "tools": [
     {
-      "id": "scriptforge",
-      "name": "ScriptForge",
+      "id": "chatgpt",
+      "name": "ChatGPT",
       "category": "Writing",
       "price": "Freemium",
       "rating": 4.9,
-      "users": "12k creators",
-      "description": "Human-like scripts for ads, reels, and YouTube hooks in minutes.",
-      "tagline": "Turn rough ideas into polished video scripts.",
-      "logo": "https://placehold.co/96x96/4f46e5/ffffff?text=SF",
-      "url": "https://scriptforge.ai",
-      "tags": ["scripts", "marketing", "storytelling"],
-      "features": ["Hook generator", "Tone matching", "CTA suggestions"],
-      "pros": ["Quick turnaround", "Strong language quality", "Built-in templates"],
-      "cons": ["Limited export formats", "Needs manual polish for longform"],
-      "pricing": [
-        { "plan": "Starter", "price": "Free", "details": "25 credits/month" },
-        { "plan": "Creator", "price": "$19/mo", "details": "Unlimited scripts" }
-      ],
-      "screenshots": [
-        "https://placehold.co/600x360/111827/ffffff?text=ScriptForge+Dashboard",
-        "https://placehold.co/600x360/1f2937/ffffff?text=ScriptForge+Editor"
-      ]
+      "users": "100M+ users",
+      "description": "The world's most popular AI chatbot for writing, coding, and brainstorming.",
+      "tagline": "Your AI-powered creative partner.",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
+      "url": "https://chat.openai.com"
     },
     {
-      "id": "brandmuse",
-      "name": "BrandMuse",
+      "id": "midjourney",
+      "name": "Midjourney",
       "category": "Design",
       "price": "Paid",
       "rating": 4.8,
-      "users": "8k teams",
-      "description": "Instant brand kits with typography, colors, and social templates.",
-      "tagline": "Launch your brand look in a day.",
-      "logo": "https://placehold.co/96x96/0ea5e9/ffffff?text=BM",
-      "url": "https://brandmuse.ai",
-      "tags": ["branding", "templates", "design"],
-      "features": ["Brand guidelines", "Logo variations", "Social kit"],
-      "pros": ["Polished output", "Great for agencies", "Fast exports"],
-      "cons": ["Premium-only assets", "Limited custom fonts"],
-      "pricing": [
-        { "plan": "Studio", "price": "$29/mo", "details": "5 brand kits" },
-        { "plan": "Agency", "price": "$79/mo", "details": "Unlimited clients" }
-      ],
-      "screenshots": [
-        "https://placehold.co/600x360/0f172a/ffffff?text=BrandMuse+Guidelines",
-        "https://placehold.co/600x360/1e293b/ffffff?text=BrandMuse+Templates"
-      ]
+      "users": "15M+ creators",
+      "description": "State-of-the-art AI image generation from natural language prompts.",
+      "tagline": "Masterpiece images from simple text.",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e6/Midjourney_Emblem.png",
+      "url": "https://www.midjourney.com"
     },
     {
-      "id": "clippilot",
-      "name": "ClipPilot",
+      "id": "runway",
+      "name": "Runway Gen-2",
       "category": "Video",
-      "price": "Free",
-      "rating": 4.7,
-      "users": "21k editors",
-      "description": "Smart trimming and captions that feel like a real editor.",
-      "tagline": "Edit reels with AI precision.",
-      "logo": "https://placehold.co/96x96/f97316/ffffff?text=CP",
-      "url": "https://clippilot.ai",
-      "tags": ["captions", "reels", "shorts"],
-      "features": ["Auto captions", "Beat sync", "Smart crop"],
-      "pros": ["Fast exports", "Accurate captions", "Free tier"],
-      "cons": ["Watermark on free", "Limited storage"],
-      "pricing": [
-        { "plan": "Starter", "price": "Free", "details": "720p exports" },
-        { "plan": "Pro", "price": "$24/mo", "details": "4K + brand presets" }
-      ],
-      "screenshots": [
-        "https://placehold.co/600x360/111827/ffffff?text=ClipPilot+Timeline",
-        "https://placehold.co/600x360/1f2937/ffffff?text=ClipPilot+Captions"
-      ]
-    },
-    {
-      "id": "promptvault",
-      "name": "PromptVault",
-      "category": "Writing",
-      "price": "Paid",
-      "rating": 5.0,
-      "users": "4k founders",
-      "description": "Curated prompt bundles for marketing, sales, and support teams.",
-      "tagline": "Premium prompts for real business wins.",
-      "logo": "https://placehold.co/96x96/6366f1/ffffff?text=PV",
-      "url": "https://promptvault.io",
-      "tags": ["prompts", "sales", "marketing"],
-      "features": ["Prompt bundles", "Team workspace", "Version control"],
-      "pros": ["High-quality prompts", "Team friendly", "Clear outcomes"],
-      "cons": ["No free tier", "Limited integrations"],
-      "pricing": [
-        { "plan": "Starter", "price": "$29/mo", "details": "3 team seats" },
-        { "plan": "Pro", "price": "$69/mo", "details": "Unlimited vaults" }
-      ],
-      "screenshots": [
-        "https://placehold.co/600x360/111827/ffffff?text=PromptVault+Library",
-        "https://placehold.co/600x360/1f2937/ffffff?text=PromptVault+Workspace"
-      ]
-    },
-    {
-      "id": "datawisp",
-      "name": "DataWisp",
-      "category": "Coding",
       "price": "Freemium",
-      "rating": 4.6,
-      "users": "6k builders",
-      "description": "SQL generation and dashboard summaries without the busy work.",
-      "tagline": "Clean analytics without the queries.",
-      "logo": "https://placehold.co/96x96/22c55e/ffffff?text=DW",
-      "url": "https://datawisp.ai",
-      "tags": ["sql", "analytics", "dashboards"],
-      "features": ["SQL assistant", "Insight summaries", "Team reports"],
-      "pros": ["Great for PMs", "Easy onboarding", "Clear output"],
-      "cons": ["Custom connectors needed", "Limited BI themes"],
-      "pricing": [
-        { "plan": "Starter", "price": "Free", "details": "2 data sources" },
-        { "plan": "Team", "price": "$39/mo", "details": "Unlimited queries" }
-      ],
-      "screenshots": [
-        "https://placehold.co/600x360/111827/ffffff?text=DataWisp+Dashboard",
-        "https://placehold.co/600x360/1f2937/ffffff?text=DataWisp+Reports"
-      ]
+      "rating": 4.7,
+      "users": "5M+ editors",
+      "description": "Next-generation AI system that can generate videos with text, images, or video clips.",
+      "tagline": "The future of video storytelling.",
+      "logo": "https://avatars.githubusercontent.com/u/43634024?s=200&v=4",
+      "url": "https://runwayml.com"
     },
     {
-      "id": "frameflow",
-      "name": "FrameFlow",
-      "category": "Design",
-      "price": "Free",
-      "rating": 4.5,
-      "users": "9k designers",
-      "description": "UI mockups that feel handcrafted, ready for client review.",
-      "tagline": "High-fidelity layouts in one click.",
-      "logo": "https://placehold.co/96x96/ec4899/ffffff?text=FF",
-      "url": "https://frameflow.ai",
-      "tags": ["ui", "wireframes", "mockups"],
-      "features": ["Component library", "Auto layout", "Client handoff"],
-      "pros": ["Beautiful presets", "Fast iterations", "Export to Figma"],
-      "cons": ["Limited mobile templates", "Needs internet"],
-      "pricing": [
-        { "plan": "Starter", "price": "Free", "details": "Basic templates" },
-        { "plan": "Studio", "price": "$15/mo", "details": "Full library" }
-      ],
-      "screenshots": [
-        "https://placehold.co/600x360/111827/ffffff?text=FrameFlow+Workspace",
-        "https://placehold.co/600x360/1f2937/ffffff?text=FrameFlow+Layouts"
-      ]
-    },
-    {
-      "id": "copyglow",
-      "name": "CopyGlow",
-      "category": "Writing",
-      "price": "Free",
-      "rating": 4.4,
-      "users": "14k marketers",
-      "description": "Ad copies, landing pages, and cold emails tuned for conversions.",
-      "tagline": "Campaign-ready copy in seconds.",
-      "logo": "https://placehold.co/96x96/ef4444/ffffff?text=CG",
-      "url": "https://copyglow.ai",
-      "tags": ["ads", "email", "copy"],
-      "features": ["A/B suggestions", "Tone control", "Persona prompts"],
-      "pros": ["Strong CTA", "Easy for teams", "Free starter"],
-      "cons": ["Limited exports", "No team roles"],
-      "pricing": [
-        { "plan": "Starter", "price": "Free", "details": "50 generations" },
-        { "plan": "Growth", "price": "$12/mo", "details": "Unlimited copy" }
-      ],
-      "screenshots": [
-        "https://placehold.co/600x360/111827/ffffff?text=CopyGlow+Dashboard",
-        "https://placehold.co/600x360/1f2937/ffffff?text=CopyGlow+Results"
-      ]
-    },
-    {
-      "id": "stackpilot",
-      "name": "StackPilot",
+      "id": "github-copilot",
+      "name": "GitHub Copilot",
       "category": "Coding",
       "price": "Paid",
-      "rating": 4.8,
-      "users": "5k engineers",
-      "description": "Ship MVPs faster with AI coding workflows and QA checks.",
-      "tagline": "From idea to PR in a day.",
-      "logo": "https://placehold.co/96x96/14b8a6/ffffff?text=SP",
-      "url": "https://stackpilot.ai",
-      "tags": ["devops", "qa", "automation"],
-      "features": ["Code generation", "PR reviews", "Test coverage"],
-      "pros": ["Great for startups", "Solid QA insights", "Fast setup"],
-      "cons": ["No self-hosted option", "Enterprise pricing"],
-      "pricing": [
-        { "plan": "Team", "price": "$49/mo", "details": "Up to 5 devs" },
-        { "plan": "Scale", "price": "$129/mo", "details": "Unlimited repos" }
-      ],
-      "screenshots": [
-        "https://placehold.co/600x360/111827/ffffff?text=StackPilot+Pipeline",
-        "https://placehold.co/600x360/1f2937/ffffff?text=StackPilot+QA"
-      ]
+      "rating": 4.9,
+      "users": "1M+ developers",
+      "description": "Your AI pair programmer that helps you write code faster with less effort.",
+      "tagline": "The world's most widely adopted AI developer tool.",
+      "logo": "https://github.githubassets.com/images/modules/site/copilot/copilot-logo.svg",
+      "url": "https://github.com/features/copilot"
     }
-  ],
-  "reviews": [
-    {
-      "name": "Riya Kapoor",
-      "role": "Startup Marketer",
-      "quote": "ToolScout ne mere liye research time aadha kar diya. Har tool ke saath clear pros/cons milte hain."
-    },
-    {
-      "name": "Arjun Mehta",
-      "role": "YouTube Creator",
-      "quote": "Deal of the Day section se mujhe genuine discounts milte hain. UI premium lagti hai, bilkul clean."
-    },
-    {
-      "name": "Sara Fernandes",
-      "role": "Product Designer",
-      "quote": "Categories aur filters itne smooth hain ki ek baar mein sahi tool mil jata hai."
-    }
-  ],
-  "deal": {
-    "label": "Deal of the Day",
-    "title": "ClipPilot Pro par 35% off — creators ke liye perfect.",
-    "subtitle": "Limited time discount, affiliate verified.",
-    "expires": "12h 45m",
-    "badge": "SAVE 35%",
-    "description": "Is deal se aapko pro features milte hain: auto captions, 4K export aur brand presets.",
-    "bullets": [
-      "AI captions in 32 languages",
-      "Smart trims with beat sync",
-      "24/7 priority support"
-    ],
-    "cta": "Grab the deal"
-  }
-    }
+  ]
+}
