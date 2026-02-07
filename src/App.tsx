@@ -1,159 +1,155 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Menu, Globe, ExternalLink, Cpu, Image as ImageIcon, MessageSquare, Code, Video, Music, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { 
+  Sparkles, Video, FileText, Image as ImageIcon, Upload, Search, 
+  BarChart3, ArrowLeft, Mic, Share2, Zap, Settings, HelpCircle, Layout
+} from 'lucide-react';
 
-// --- AI Tools Data ---
-const tools = [
-  {
-    id: 1,
-    name: 'ChatGPT',
-    description: 'Advanced conversational AI by OpenAI for writing, coding, and brainstorming.',
-    category: 'Text',
-    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=400',
-    link: 'https://chat.openai.com',
-    tags: ['Popular', 'Free/Paid']
-  },
-  {
-    id: 2,
-    name: 'Midjourney',
-    description: 'High-quality AI image generation through Discord commands.',
-    category: 'Image',
-    image: 'https://images.unsplash.com/photo-1678332822183-4a0058e57833?auto=format&fit=crop&q=80&w=400',
-    link: 'https://midjourney.com',
-    tags: ['Art', 'Paid']
-  },
-  {
-    id: 3,
-    name: 'GitHub Copilot',
-    description: 'Your AI pair programmer that helps you write code faster.',
-    category: 'Code',
-    image: 'https://images.unsplash.com/photo-1662010021854-e67c538ea7a9?auto=format&fit=crop&q=80&w=400',
-    link: 'https://github.com/features/copilot',
-    tags: ['Developer', 'Subscription']
-  }
-];
-
-// --- Main App Component ---
 export default function App() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [selectedTool, setSelectedTool] = useState(null);
 
-  const categories = ['All', 'Text', 'Image', 'Code', 'Video', 'Music'];
-
-  const filteredTools = tools.filter(tool => {
-    const matchesSearch = tool.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         tool.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || tool.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const toolCategories = [
+    {
+      name: "Video Engineering",
+      icon: <Video className="text-blue-500" />,
+      tools: [
+        { id: 'captions', name: 'Auto-Viral Captions', desc: 'Add influencer-style subtitles.' },
+        { id: 'jumpcut', name: 'Pro Jump-Cut', desc: 'Remove silence & boring parts.' },
+        { id: 'hook', name: 'Hook Master', desc: 'Add viral visual/text hooks.' },
+        { id: 'grading', name: 'Cinematic Color Fix', desc: 'Studio-grade color grading.' },
+        { id: 'summary', name: 'Video Summarizer', desc: 'Long videos to 60s reels.' }
+      ]
+    },
+    {
+      name: "Content & SEO",
+      icon: <FileText className="text-purple-500" />,
+      tools: [
+        { id: 'script', name: '1-Click Script Writer', desc: 'Full viral script structure.' },
+        { id: 'seo', name: 'SEO Deep-Rank', desc: 'Top-ranking tags & description.' },
+        { id: 'titles', name: 'Title A/B Genius', desc: '5 high-CTR title options.' },
+        { id: 'plan', name: '30-Day Content Plan', desc: 'Full monthly content calendar.' },
+        { id: 'translator', name: 'Script Translator', desc: 'Pro multi-language translation.' }
+      ]
+    },
+    {
+      name: "Visuals & Branding",
+      icon: <ImageIcon className="text-green-500" />,
+      tools: [
+        { id: 'upscale', name: '4K Image Upscaler', desc: 'Low-res to ultra-HD quality.' },
+        { id: 'bg-remove', name: 'BG Magic Remover', desc: 'Clean studio background removal.' },
+        { id: 'thumb-ai', name: 'Thumbnail Concept', desc: 'AI-generated thumbnail ideas.' },
+        { id: 'social-kit', name: 'Social Media Kit', desc: 'DP, Banners & Posts in 1-click.' },
+        { id: 'icons', name: 'Text-to-Icon', desc: 'Custom brand icons from text.' }
+      ]
+    },
+    {
+      name: "Audio & Marketing",
+      icon: <Mic className="text-orange-500" />,
+      tools: [
+        { id: 'voice', name: 'Ultra-Human Voice', desc: 'Hyper-realistic AI voiceovers.' },
+        { id: 'clean', name: 'Podcast Clean-Up', desc: 'Remove noise, studio quality.' },
+        { id: 'sync', name: 'Music Sync', desc: 'Mood-based background music.' },
+        { id: 'ads', name: 'Ad Copy Pro', desc: 'High-converting ad copies.' },
+        { id: 'social', name: 'Viral Tweet/Post', desc: 'Trending social media content.' }
+      ]
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-cyan-500/30">
-      {/* Navbar */}
-      <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <img 
-                src="/logo.png" 
-                alt="ToolScout" 
-                className="h-10 w-10 object-contain mr-2" 
-                onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/40?text=TS'; }}
-              />
-              <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent tracking-tight">
-                ToolScout
-              </span>
-            </div>
-            
-            <div className="hidden md:flex items-center space-x-8 text-sm font-medium">
-              {['Tools', 'Categories', 'About'].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} className="text-gray-400 hover:text-cyan-400 transition-colors">
-                  {item}
-                </a>
-              ))}
-              <button className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-5 py-2 rounded-full transition-all shadow-lg shadow-cyan-500/20 flex items-center">
-                <Globe className="w-4 h-4 mr-2" />
-                Submit Tool
-              </button>
-            </div>
-            <div className="md:hidden text-gray-400"><Menu className="w-6 h-6" /></div>
-          </div>
+    <div className="min-h-screen bg-[#050505] text-white font-sans">
+      {/* Sidebar */}
+      <aside className="fixed left-0 top-0 h-full w-64 bg-black border-r border-white/5 hidden lg:flex flex-col p-6">
+        <div className="flex items-center gap-2 mb-12">
+          <div className="bg-blue-600 p-1.5 rounded-lg"><Zap size={20} fill="white" /></div>
+          <span className="text-xl font-black tracking-tighter italic">TOOLSCOUT</span>
         </div>
-      </nav>
+        
+        <nav className="flex-1 space-y-2">
+          <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Main Menu</div>
+          <button onClick={() => setActiveTab('dashboard')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'dashboard' ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-white'}`}>
+            <Layout size={18} /> Dashboard
+          </button>
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:text-white transition-all">
+            <Settings size={18} /> Settings
+          </button>
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:text-white transition-all">
+            <HelpCircle size={18} /> Support
+          </button>
+        </nav>
+      </aside>
 
-      {/* Hero Section */}
-      <main className="pt-32 pb-20 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full mb-8">
-            <Sparkles className="w-4 h-4 text-cyan-400" />
-            <span className="text-sm text-gray-400">Discover the Next Generation of AI Tools</span>
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight">
-            Find the perfect <br />
-            <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-              AI companion
-            </span>
-          </h1>
+      {/* Main Content */}
+      <main className="lg:ml-64 p-8">
+        {activeTab === 'dashboard' ? (
+          /* DASHBOARD VIEW */
+          <div className="max-w-6xl mx-auto">
+            <header className="mb-12 flex justify-between items-center">
+              <div>
+                <h1 className="text-4xl font-black mb-2">Welcome, Creator</h1>
+                <p className="text-gray-500 font-medium">Which "Pro" tool do you need today?</p>
+              </div>
+              <div className="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl flex items-center gap-3">
+                <Search size={18} className="text-gray-500" />
+                <input placeholder="Search 20+ Pro Tools..." className="bg-transparent outline-none text-sm w-48" />
+              </div>
+            </header>
 
-          {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mb-12 relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-cyan-400 transition-colors w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search for AI tools (e.g. ChatGPT, Midjourney...)"
-              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all text-lg"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          {/* Categories */}
-          <div className="flex flex-wrap justify-center gap-3 mb-16">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-2 rounded-full border transition-all ${
-                  selectedCategory === category
-                    ? 'bg-cyan-500 border-cyan-500 text-white shadow-lg shadow-cyan-500/20'
-                    : 'border-white/10 bg-white/5 text-gray-400 hover:border-white/20 hover:bg-white/10'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-
-          {/* Tools Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
-            {filteredTools.map((tool) => (
-              <div key={tool.id} className="group bg-white/5 border border-white/10 rounded-3xl p-6 hover:bg-white/[0.08] transition-all hover:-translate-y-1 hover:border-white/20">
-                <div className="relative h-48 mb-6 overflow-hidden rounded-2xl">
-                  <img src={tool.image} alt={tool.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                  <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium border border-white/10 text-cyan-400">
-                    {tool.category}
+            {/* Categories Grid */}
+            <div className="space-y-12">
+              {toolCategories.map((category) => (
+                <div key={category.name}>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 bg-white/5 rounded-lg">{category.icon}</div>
+                    <h2 className="text-xl font-bold">{category.name}</h2>
                   </div>
-                </div>
-                <h3 className="text-2xl font-bold mb-2 group-hover:text-cyan-400 transition-colors">{tool.name}</h3>
-                <p className="text-gray-400 text-sm mb-6 line-clamp-2">{tool.description}</p>
-                <div className="flex items-center justify-between mt-auto">
-                  <div className="flex gap-2">
-                    {tool.tags.map(tag => (
-                      <span key={tag} className="text-[10px] uppercase tracking-wider text-gray-500 border border-white/5 px-2 py-1 rounded">
-                        {tag}
-                      </span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {category.tools.map((tool) => (
+                      <div 
+                        key={tool.id}
+                        onClick={() => { setSelectedTool(tool); setActiveTab('editor'); }}
+                        className="p-6 rounded-3xl bg-neutral-900/40 border border-white/5 hover:border-blue-500/50 hover:bg-blue-500/5 transition-all cursor-pointer group"
+                      >
+                        <h3 className="font-bold mb-1 group-hover:text-blue-400">{tool.name}</h3>
+                        <p className="text-xs text-gray-500 leading-relaxed">{tool.desc}</p>
+                      </div>
                     ))}
                   </div>
-                  <a href={tool.link} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-lg hover:bg-cyan-500 hover:text-white transition-all">
-                    <ExternalLink className="w-5 h-5" />
-                  </a>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          /* WORKSPACE VIEW */
+          <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <button onClick={() => setActiveTab('dashboard')} className="mb-8 text-gray-500 hover:text-white flex items-center gap-2">
+              <ArrowLeft size={18} /> Back to Dashboard
+            </button>
+            <div className="bg-neutral-900/60 border border-white/5 rounded-[48px] p-12">
+              <span className="bg-blue-600/10 text-blue-500 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6 inline-block">Pro AI Workspace</span>
+              <h2 className="text-5xl font-black mb-4 tracking-tighter">{selectedTool?.name}</h2>
+              <p className="text-gray-400 text-lg mb-10">{selectedTool?.desc}</p>
+              
+              <div className="space-y-6">
+                <div className="border-2 border-dashed border-white/10 rounded-[32px] p-20 text-center hover:border-blue-500/30 transition-all cursor-pointer">
+                  <Upload className="mx-auto mb-4 text-gray-600" size={48} />
+                  <p className="font-bold text-xl">Upload Assets</p>
+                  <p className="text-gray-500 text-sm">Drag & drop your files here</p>
+                </div>
+                
+                <textarea 
+                  placeholder="Enter your pro prompt here..."
+                  className="w-full bg-black border border-white/5 rounded-3xl p-6 h-40 focus:ring-2 focus:ring-blue-500 outline-none transition-all text-lg"
+                ></textarea>
+
+                <button className="w-full bg-blue-600 hover:bg-blue-500 py-6 rounded-[24px] font-black text-xl flex items-center justify-center gap-3 shadow-2xl shadow-blue-900/40">
+                  <Sparkles size={24} /> START PRO GENERATION
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
-              }
-                  
+      }
+         
