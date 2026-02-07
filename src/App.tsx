@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { 
   Sparkles, Video, FileText, Image as ImageIcon, Upload, Search, 
-  BarChart3, ArrowLeft, Mic, Share2, Zap, Settings, HelpCircle, Layout
+  BarChart3, ArrowLeft, Mic, Menu, X, Zap
 } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedTool, setSelectedTool] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toolCategories = [
     {
       name: "Video Engineering",
-      icon: <Video className="text-blue-500" />,
+      icon: <Video className="text-blue-500" size={20} />,
       tools: [
         { id: 'captions', name: 'Auto-Viral Captions', desc: 'Add influencer-style subtitles.' },
         { id: 'jumpcut', name: 'Pro Jump-Cut', desc: 'Remove silence & boring parts.' },
@@ -22,95 +23,77 @@ export default function App() {
     },
     {
       name: "Content & SEO",
-      icon: <FileText className="text-purple-500" />,
+      icon: <FileText className="text-purple-500" size={20} />,
       tools: [
         { id: 'script', name: '1-Click Script Writer', desc: 'Full viral script structure.' },
         { id: 'seo', name: 'SEO Deep-Rank', desc: 'Top-ranking tags & description.' },
-        { id: 'titles', name: 'Title A/B Genius', desc: '5 high-CTR title options.' },
-        { id: 'plan', name: '30-Day Content Plan', desc: 'Full monthly content calendar.' },
-        { id: 'translator', name: 'Script Translator', desc: 'Pro multi-language translation.' }
-      ]
-    },
-    {
-      name: "Visuals & Branding",
-      icon: <ImageIcon className="text-green-500" />,
-      tools: [
-        { id: 'upscale', name: '4K Image Upscaler', desc: 'Low-res to ultra-HD quality.' },
-        { id: 'bg-remove', name: 'BG Magic Remover', desc: 'Clean studio background removal.' },
-        { id: 'thumb-ai', name: 'Thumbnail Concept', desc: 'AI-generated thumbnail ideas.' },
-        { id: 'social-kit', name: 'Social Media Kit', desc: 'DP, Banners & Posts in 1-click.' },
-        { id: 'icons', name: 'Text-to-Icon', desc: 'Custom brand icons from text.' }
-      ]
-    },
-    {
-      name: "Audio & Marketing",
-      icon: <Mic className="text-orange-500" />,
-      tools: [
-        { id: 'voice', name: 'Ultra-Human Voice', desc: 'Hyper-realistic AI voiceovers.' },
-        { id: 'clean', name: 'Podcast Clean-Up', desc: 'Remove noise, studio quality.' },
-        { id: 'sync', name: 'Music Sync', desc: 'Mood-based background music.' },
-        { id: 'ads', name: 'Ad Copy Pro', desc: 'High-converting ad copies.' },
-        { id: 'social', name: 'Viral Tweet/Post', desc: 'Trending social media content.' }
+        { id: 'titles', name: 'Title A/B Genius', desc: '5 high-CTR title options.' }
       ]
     }
   ];
 
+  const handleToolClick = (tool) => {
+    setSelectedTool(tool);
+    setActiveTab('editor');
+    setIsMenuOpen(false);
+    window.scrollTo(0, 0);
+  };
+
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans">
-      {/* Sidebar */}
-      <aside className="fixed left-0 top-0 h-full w-64 bg-black border-r border-white/5 hidden lg:flex flex-col p-6">
-        <div className="flex items-center gap-2 mb-12">
-          <div className="bg-blue-600 p-1.5 rounded-lg"><Zap size={20} fill="white" /></div>
-          <span className="text-xl font-black tracking-tighter italic">TOOLSCOUT</span>
+    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-blue-500/30 overflow-x-hidden">
+      {/* --- FIXED NAVBAR --- */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-lg border-b border-white/10 px-4 h-16 flex justify-between items-center">
+        <div 
+          className="flex items-center gap-2 cursor-pointer" 
+          onClick={() => {setActiveTab('dashboard'); setSelectedTool(null); setIsMenuOpen(false);}}
+        >
+          <div className="bg-blue-600 p-1 rounded-lg flex items-center justify-center">
+            <Zap size={18} fill="white" />
+          </div>
+          <span className="text-lg font-black tracking-tighter italic">TOOLSCOUT AI</span>
         </div>
         
-        <nav className="flex-1 space-y-2">
-          <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Main Menu</div>
-          <button onClick={() => setActiveTab('dashboard')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'dashboard' ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-white'}`}>
-            <Layout size={18} /> Dashboard
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:text-white transition-all">
-            <Settings size={18} /> Settings
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:text-white transition-all">
-            <HelpCircle size={18} /> Support
-          </button>
-        </nav>
-      </aside>
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-gray-400">
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </nav>
 
-      {/* Main Content */}
-      <main className="lg:ml-64 p-8">
+      {/* --- MOBILE MENU OVERLAY --- */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-black animate-in fade-in duration-300 pt-20 px-6">
+          <nav className="flex flex-col gap-8 text-3xl font-black italic">
+            <button onClick={() => {setActiveTab('dashboard'); setIsMenuOpen(false);}}>DASHBOARD</button>
+            <button onClick={() => setIsMenuOpen(false)}>SERVICES</button>
+            <button onClick={() => setIsMenuOpen(false)}>PRO ACCESS</button>
+            <button onClick={() => setIsMenuOpen(false)}>SETTINGS</button>
+          </nav>
+        </div>
+      )}
+
+      {/* --- MAIN CONTENT --- */}
+      <main className="pt-20 pb-10 px-4 w-full max-w-full box-border">
         {activeTab === 'dashboard' ? (
-          /* DASHBOARD VIEW */
-          <div className="max-w-6xl mx-auto">
-            <header className="mb-12 flex justify-between items-center">
-              <div>
-                <h1 className="text-4xl font-black mb-2">Welcome, Creator</h1>
-                <p className="text-gray-500 font-medium">Which "Pro" tool do you need today?</p>
-              </div>
-              <div className="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl flex items-center gap-3">
-                <Search size={18} className="text-gray-500" />
-                <input placeholder="Search 20+ Pro Tools..." className="bg-transparent outline-none text-sm w-48" />
-              </div>
+          <div className="animate-in fade-in duration-500">
+            <header className="mb-8">
+              <h1 className="text-3xl font-black mb-2 leading-tight">Welcome,<br/>Creator</h1>
+              <p className="text-gray-500 text-sm">Select a pro tool to start.</p>
             </header>
 
-            {/* Categories Grid */}
-            <div className="space-y-12">
+            <div className="space-y-10">
               {toolCategories.map((category) => (
-                <div key={category.name}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-white/5 rounded-lg">{category.icon}</div>
-                    <h2 className="text-xl font-bold">{category.name}</h2>
+                <div key={category.name} className="w-full">
+                  <div className="flex items-center gap-2 mb-4 border-l-2 border-blue-600 pl-3">
+                    <h2 className="text-sm font-bold uppercase tracking-widest text-gray-400">{category.name}</h2>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 gap-3">
                     {category.tools.map((tool) => (
                       <div 
                         key={tool.id}
-                        onClick={() => { setSelectedTool(tool); setActiveTab('editor'); }}
-                        className="p-6 rounded-3xl bg-neutral-900/40 border border-white/5 hover:border-blue-500/50 hover:bg-blue-500/5 transition-all cursor-pointer group"
+                        onClick={() => handleToolClick(tool)}
+                        className="p-5 rounded-2xl bg-neutral-900/60 border border-white/5 active:bg-blue-600/10 active:border-blue-500/50 transition-all cursor-pointer"
                       >
-                        <h3 className="font-bold mb-1 group-hover:text-blue-400">{tool.name}</h3>
-                        <p className="text-xs text-gray-500 leading-relaxed">{tool.desc}</p>
+                        <h3 className="font-bold text-base mb-1">{tool.name}</h3>
+                        <p className="text-[11px] text-gray-500 leading-relaxed">{tool.desc}</p>
                       </div>
                     ))}
                   </div>
@@ -119,30 +102,34 @@ export default function App() {
             </div>
           </div>
         ) : (
-          /* WORKSPACE VIEW */
-          <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <button onClick={() => setActiveTab('dashboard')} className="mb-8 text-gray-500 hover:text-white flex items-center gap-2">
-              <ArrowLeft size={18} /> Back to Dashboard
+          /* --- WORKSPACE VIEW (MOBILE OPTIMIZED) --- */
+          <div className="animate-in slide-in-from-bottom-4 duration-500 w-full">
+            <button onClick={() => setActiveTab('dashboard')} className="mb-6 text-gray-500 flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
+              <ArrowLeft size={14} /> Back to Tools
             </button>
-            <div className="bg-neutral-900/60 border border-white/5 rounded-[48px] p-12">
-              <span className="bg-blue-600/10 text-blue-500 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6 inline-block">Pro AI Workspace</span>
-              <h2 className="text-5xl font-black mb-4 tracking-tighter">{selectedTool?.name}</h2>
-              <p className="text-gray-400 text-lg mb-10">{selectedTool?.desc}</p>
+            <div className="bg-neutral-900/80 border border-white/10 rounded-[28px] p-6 shadow-2xl">
+              <div className="mb-8">
+                <span className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-2 block">AI Workspace</span>
+                <h2 className="text-2xl font-black mb-2 leading-tight">{selectedTool?.name}</h2>
+                <p className="text-gray-500 text-xs">{selectedTool?.desc}</p>
+              </div>
               
-              <div className="space-y-6">
-                <div className="border-2 border-dashed border-white/10 rounded-[32px] p-20 text-center hover:border-blue-500/30 transition-all cursor-pointer">
-                  <Upload className="mx-auto mb-4 text-gray-600" size={48} />
-                  <p className="font-bold text-xl">Upload Assets</p>
-                  <p className="text-gray-500 text-sm">Drag & drop your files here</p>
+              <div className="space-y-5">
+                <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center bg-black/20 active:bg-white/5 transition-all">
+                  <Upload className="mx-auto mb-3 text-gray-600" size={28} />
+                  <p className="font-bold text-xs uppercase tracking-tight">Tap to Upload File</p>
                 </div>
                 
-                <textarea 
-                  placeholder="Enter your pro prompt here..."
-                  className="w-full bg-black border border-white/5 rounded-3xl p-6 h-40 focus:ring-2 focus:ring-blue-500 outline-none transition-all text-lg"
-                ></textarea>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-gray-500 uppercase ml-1">AI Prompt</label>
+                  <textarea 
+                    placeholder="Describe how you want it edited..."
+                    className="w-full bg-black border border-white/10 rounded-xl p-4 h-32 focus:ring-1 focus:ring-blue-500 outline-none text-sm transition-all"
+                  ></textarea>
+                </div>
 
-                <button className="w-full bg-blue-600 hover:bg-blue-500 py-6 rounded-[24px] font-black text-xl flex items-center justify-center gap-3 shadow-2xl shadow-blue-900/40">
-                  <Sparkles size={24} /> START PRO GENERATION
+                <button className="w-full bg-blue-600 active:bg-blue-700 py-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-blue-900/20">
+                  <Sparkles size={16} /> GENERATE PRO RESULT
                 </button>
               </div>
             </div>
@@ -151,5 +138,5 @@ export default function App() {
       </main>
     </div>
   );
-      }
-         
+    }
+        
