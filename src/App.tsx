@@ -1,142 +1,125 @@
-import React, { useState } from 'react';
-import { 
-  Sparkles, Video, FileText, Image as ImageIcon, Upload, Search, 
-  BarChart3, ArrowLeft, Mic, Menu, X, Zap
-} from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Sparkles, Video, FileText, Image as ImageIcon, Mic, BarChart3, Menu, Zap, ArrowRight } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [selectedTool, setSelectedTool] = useState(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [displayText, setDisplayText] = useState('AI Video Editor');
 
-  const toolCategories = [
-    {
-      name: "Video Engineering",
-      icon: <Video className="text-blue-500" size={20} />,
-      tools: [
-        { id: 'captions', name: 'Auto-Viral Captions', desc: 'Add influencer-style subtitles.' },
-        { id: 'jumpcut', name: 'Pro Jump-Cut', desc: 'Remove silence & boring parts.' },
-        { id: 'hook', name: 'Hook Master', desc: 'Add viral visual/text hooks.' },
-        { id: 'grading', name: 'Cinematic Color Fix', desc: 'Studio-grade color grading.' },
-        { id: 'summary', name: 'Video Summarizer', desc: 'Long videos to 60s reels.' }
-      ]
-    },
-    {
-      name: "Content & SEO",
-      icon: <FileText className="text-purple-500" size={20} />,
-      tools: [
-        { id: 'script', name: '1-Click Script Writer', desc: 'Full viral script structure.' },
-        { id: 'seo', name: 'SEO Deep-Rank', desc: 'Top-ranking tags & description.' },
-        { id: 'titles', name: 'Title A/B Genius', desc: '5 high-CTR title options.' }
-      ]
-    }
+  // Rotating Text Logic
+  const words = ['AI Video Editor', 'AI Script Writer', 'AI SEO Expert', 'AI Voice Artist', 'AI Thumbnail Designer'];
+  
+  useEffect(() => {
+    let i = 0;
+    const interval = setInterval(() => {
+      i = (i + 1) % words.length;
+      setDisplayText(words[i]);
+    }, 3000); // Har 3 second mein badlega
+    return () => clearInterval(interval);
+  }, []);
+
+  // Hamare Pro 20 Tools (Sample list, aap isse badha sakte ho)
+  const proTools = [
+    { id: 1, name: 'Auto-Viral Captions', desc: 'Add influencer-style subtitles automatically.', category: 'Video', icon: <Video className="text-blue-500" /> },
+    { id: 2, name: '1-Click Script Writer', desc: 'Viral scripts for YouTube, Reels & Ads.', category: 'Text', icon: <FileText className="text-purple-500" /> },
+    { id: 3, name: '4K Image Upscaler', desc: 'Convert low-res photos to ultra-HD quality.', category: 'Image', icon: <ImageIcon className="text-green-500" /> },
+    { id: 4, name: 'Ultra-Human Voice', desc: 'Hyper-realistic AI voiceovers in any language.', category: 'Audio', icon: <Mic className="text-orange-500" /> },
+    { id: 5, name: 'SEO Deep-Rank', desc: 'Generate high-ranking tags & descriptions.', category: 'SEO', icon: <BarChart3 className="text-red-500" /> },
+    { id: 6, name: 'Pro Jump-Cut', desc: 'Remove silence & boring parts from videos.', category: 'Video', icon: <Zap className="text-yellow-500" /> },
+    { id: 7, name: 'Thumbnail Genius', desc: 'AI-generated thumbnail concepts that get clicks.', category: 'Image', icon: <ImageIcon className="text-blue-400" /> },
+    { id: 8, name: 'Ad Copy Pro', desc: 'High-converting ad copies for FB & Instagram.', category: 'Text', icon: <FileText className="text-green-400" /> },
   ];
 
-  const handleToolClick = (tool) => {
-    setSelectedTool(tool);
-    setActiveTab('editor');
-    setIsMenuOpen(false);
-    window.scrollTo(0, 0);
-  };
+  const categories = ['All', 'Video', 'Text', 'Image', 'Audio', 'SEO'];
+
+  const filteredTools = proTools.filter(tool => {
+    const matchesCategory = selectedCategory === 'All' || tool.category === selectedCategory;
+    const matchesSearch = tool.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-blue-500/30 overflow-x-hidden">
-      {/* --- FIXED NAVBAR --- */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-lg border-b border-white/10 px-4 h-16 flex justify-between items-center">
-        <div 
-          className="flex items-center gap-2 cursor-pointer" 
-          onClick={() => {setActiveTab('dashboard'); setSelectedTool(null); setIsMenuOpen(false);}}
-        >
-          <div className="bg-blue-600 p-1 rounded-lg flex items-center justify-center">
+      {/* Navbar */}
+      <nav className="p-5 border-b border-white/5 flex justify-between items-center sticky top-0 bg-black/80 backdrop-blur-xl z-50">
+        <div className="flex items-center gap-2">
+          <div className="bg-blue-600 p-1.5 rounded-lg shadow-lg shadow-blue-900/40">
             <Zap size={18} fill="white" />
           </div>
-          <span className="text-lg font-black tracking-tighter italic">TOOLSCOUT AI</span>
+          <span className="text-xl font-black tracking-tighter italic">TOOLSCOUT</span>
         </div>
-        
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-gray-400">
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <Menu className="text-gray-400" />
       </nav>
 
-      {/* --- MOBILE MENU OVERLAY --- */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-black animate-in fade-in duration-300 pt-20 px-6">
-          <nav className="flex flex-col gap-8 text-3xl font-black italic">
-            <button onClick={() => {setActiveTab('dashboard'); setIsMenuOpen(false);}}>DASHBOARD</button>
-            <button onClick={() => setIsMenuOpen(false)}>SERVICES</button>
-            <button onClick={() => setIsMenuOpen(false)}>PRO ACCESS</button>
-            <button onClick={() => setIsMenuOpen(false)}>SETTINGS</button>
-          </nav>
+      {/* Hero Section */}
+      <div className="pt-20 pb-10 px-6 text-center max-w-5xl mx-auto">
+        <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full mb-8 animate-pulse">
+          <Sparkles size={14} className="text-blue-400" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-300">The Ultimate AI Powerhouse for Creators</span>
         </div>
-      )}
+        
+        <h1 className="text-5xl md:text-8xl font-black mb-6 tracking-tighter leading-tight italic">
+          Find the perfect <br />
+          <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-blue-600 bg-clip-text text-transparent transition-all duration-1000">
+            {displayText}
+          </span>
+        </h1>
 
-      {/* --- MAIN CONTENT --- */}
-      <main className="pt-20 pb-10 px-4 w-full max-w-full box-border">
-        {activeTab === 'dashboard' ? (
-          <div className="animate-in fade-in duration-500">
-            <header className="mb-8">
-              <h1 className="text-3xl font-black mb-2 leading-tight">Welcome,<br/>Creator</h1>
-              <p className="text-gray-500 text-sm">Select a pro tool to start.</p>
-            </header>
+        {/* Search Bar */}
+        <div className="relative max-w-2xl mx-auto mt-12">
+          <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
+          <input 
+            type="text"
+            placeholder="Search 20+ Pro Tools..."
+            className="w-full bg-[#111] border border-white/5 rounded-[24px] py-6 px-16 focus:outline-none focus:border-blue-600/50 transition-all text-lg shadow-2xl"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
 
-            <div className="space-y-10">
-              {toolCategories.map((category) => (
-                <div key={category.name} className="w-full">
-                  <div className="flex items-center gap-2 mb-4 border-l-2 border-blue-600 pl-3">
-                    <h2 className="text-sm font-bold uppercase tracking-widest text-gray-400">{category.name}</h2>
-                  </div>
-                  <div className="grid grid-cols-1 gap-3">
-                    {category.tools.map((tool) => (
-                      <div 
-                        key={tool.id}
-                        onClick={() => handleToolClick(tool)}
-                        className="p-5 rounded-2xl bg-neutral-900/60 border border-white/5 active:bg-blue-600/10 active:border-blue-500/50 transition-all cursor-pointer"
-                      >
-                        <h3 className="font-bold text-base mb-1">{tool.name}</h3>
-                        <p className="text-[11px] text-gray-500 leading-relaxed">{tool.desc}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          /* --- WORKSPACE VIEW (MOBILE OPTIMIZED) --- */
-          <div className="animate-in slide-in-from-bottom-4 duration-500 w-full">
-            <button onClick={() => setActiveTab('dashboard')} className="mb-6 text-gray-500 flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
-              <ArrowLeft size={14} /> Back to Tools
+        {/* Categories */}
+        <div className="flex flex-wrap justify-center gap-3 mt-10">
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-8 py-3 rounded-full text-[11px] font-black uppercase tracking-widest transition-all border ${
+                selectedCategory === cat 
+                ? 'bg-blue-600 border-blue-600 text-white shadow-xl shadow-blue-900/40 translate-y-[-2px]' 
+                : 'bg-white/5 border-white/10 text-gray-500 hover:bg-white/10'
+              }`}
+            >
+              {cat}
             </button>
-            <div className="bg-neutral-900/80 border border-white/10 rounded-[28px] p-6 shadow-2xl">
-              <div className="mb-8">
-                <span className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-2 block">AI Workspace</span>
-                <h2 className="text-2xl font-black mb-2 leading-tight">{selectedTool?.name}</h2>
-                <p className="text-gray-500 text-xs">{selectedTool?.desc}</p>
-              </div>
-              
-              <div className="space-y-5">
-                <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center bg-black/20 active:bg-white/5 transition-all">
-                  <Upload className="mx-auto mb-3 text-gray-600" size={28} />
-                  <p className="font-bold text-xs uppercase tracking-tight">Tap to Upload File</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-gray-500 uppercase ml-1">AI Prompt</label>
-                  <textarea 
-                    placeholder="Describe how you want it edited..."
-                    className="w-full bg-black border border-white/10 rounded-xl p-4 h-32 focus:ring-1 focus:ring-blue-500 outline-none text-sm transition-all"
-                  ></textarea>
-                </div>
+          ))}
+        </div>
+      </div>
 
-                <button className="w-full bg-blue-600 active:bg-blue-700 py-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-blue-900/20">
-                  <Sparkles size={16} /> GENERATE PRO RESULT
-                </button>
+      {/* Tools Grid */}
+      <div className="max-w-7xl mx-auto px-6 pb-32 mt-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredTools.map(tool => (
+            <div 
+              key={tool.id}
+              className="group bg-neutral-900/20 border border-white/5 rounded-[40px] p-10 hover:bg-neutral-900/50 hover:border-blue-500/30 transition-all duration-500 cursor-pointer"
+            >
+              <div className="mb-8 flex justify-between items-start">
+                <div className="p-5 bg-black rounded-3xl border border-white/5 group-hover:border-blue-500/50 transition-all">
+                  {tool.icon}
+                </div>
+                <div className="bg-white/5 px-4 py-1.5 rounded-full border border-white/10 text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                  {tool.category}
+                </div>
+              </div>
+              <h3 className="text-2xl font-black mb-3 italic tracking-tight">{tool.name}</h3>
+              <p className="text-gray-500 text-sm leading-relaxed mb-8 font-medium">{tool.desc}</p>
+              
+              <div className="flex items-center gap-3 text-[11px] font-black text-blue-500 uppercase tracking-widest group-hover:gap-5 transition-all">
+                Launch Workspace <ArrowRight size={16} />
               </div>
             </div>
-          </div>
-        )}
-      </main>
+          ))}
+        </div>
+      </div>
     </div>
   );
-    }
-        
+}
