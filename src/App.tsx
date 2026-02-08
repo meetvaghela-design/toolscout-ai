@@ -1,123 +1,172 @@
 import React, { useState, useEffect } from 'react';
-import { Video, Youtube, Palette, Mic, TrendingUp, Search, Menu, Zap, MessageSquare, Image, Share2, Globe, Sparkles } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Search, Sparkles, Video, FileText, Image as ImageIcon, Mic, BarChart3, Menu, Zap, ArrowRight, X, ArrowLeft, Upload } from 'lucide-react';
 
-const App = () => {
+export default function App() {
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
-  const [index, setIndex] = useState(0);
+  const [activeTool, setActiveTool] = useState(null);
+  const [wordIndex, setWordIndex] = useState(0);
+  
+  // NEW: AI states for backend connectivity
+  const [aiResult, setAiResult] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const words = ["AI Script Writer", "AI Video Editor", "SEO Expert", "Thumbnail Designer"];
-
+  const words = ['Video Editor', 'Script Writer', 'SEO Expert', 'Voice Artist', 'Thumbnail Designer'];
+  
   useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % words.length);
-    }, 2500);
-    return () => clearInterval(timer);
-  }, []);
+    if (!activeTool) {
+      const interval = setInterval(() => {
+        setWordIndex((prev) => (prev + 1) % words.length);
+      }, 2500);
+      return () => clearInterval(interval);
+    }
+  }, [activeTool]);
 
-  // 20 Tools ki Poori List
-  const tools = [
-    { id: 1, name: 'Auto-Viral Captions', desc: 'Modern, colorful subtitles auto-add honge.', Icon: Video },
-    { id: 2, name: 'Pro Jump-Cut', desc: 'Video se boring silence mita dega.', Icon: Video },
-    { id: 3, name: '1-Click Script Writer', desc: 'Viral video ka poora structure likhega.', Icon: Youtube },
-    { id: 4, name: '4K Image Upscaler', desc: 'Purani photo ko HD kar dega.', Icon: Palette },
-    { id: 5, name: 'Ultra-Human Voice', desc: 'AI voice jo bilkul insaan jaisi ho.', Icon: Mic },
-    { id: 6, name: '30-Day Content Plan', desc: 'Agle ek mahine ka content calendar.', Icon: TrendingUp },
-    { id: 7, name: 'AI Face Swap', desc: 'Video mein face replace karein asani se.', Icon: Sparkles },
-    { id: 8, name: 'Smart B-Roll Finder', desc: 'Script ke hisaab se stock footage dhunde.', Icon: Search },
-    { id: 9, name: 'Tweet to Video', desc: 'Tweets ko viral videos mein badlein.', Icon: Share2 },
-    { id: 10, name: 'AI Podcast Editor', desc: 'Audio se noise saaf karke edit kare.', Icon: Mic },
-    { id: 11, name: 'Title Generator', desc: 'High CTR wale titles generate kare.', Icon: MessageSquare },
-    { id: 12, name: 'Thumbnail Background AI', desc: 'Background badlo 1 second mein.', Icon: Image },
-    { id: 13, name: 'Global Subtitles', desc: 'Video ko kisi bhi language mein badlo.', Icon: Globe },
-    { id: 14, name: 'Viral Hook Writer', desc: 'Video ki starting ko interesting banaye.', Icon: Sparkles },
-    { id: 15, name: 'AI Color Grader', desc: 'Cinematic color grading ek click mein.', Icon: Palette },
-    { id: 16, name: 'Shadow Remover', desc: 'Face se dark shadows hataye.', Icon: Video },
-    { id: 17, name: 'Logo Animator', desc: 'Static logo ko motion mein laaye.', Icon: Zap },
-    { id: 18, name: 'SEO Tag Extractor', desc: 'Competitors ke viral tags nikaale.', Icon: Youtube },
-    { id: 19, name: 'AI Reel Maker', desc: 'Long video se short clips nikaale.', Icon: Video },
-    { id: 20, name: 'Trend Predictor', desc: 'Next viral topic bataye.', Icon: TrendingUp },
+  const proTools = [
+    { id: 'captions', name: 'Auto-Viral Captions', desc: 'Add influencer-style subtitles automatically.', category: 'Video', icon: <Video className="text-blue-500" /> },
+    { id: 'script', name: '1-Click Script Writer', desc: 'Viral scripts for YouTube, Reels & Ads.', category: 'Text', icon: <FileText className="text-purple-500" /> },
+    { id: 'upscale', name: '4K Image Upscaler', desc: 'Convert low-res photos to ultra-HD quality.', category: 'Image', icon: <ImageIcon className="text-green-500" /> },
+    { id: 'voice', name: 'Ultra-Human Voice', desc: 'Hyper-realistic AI voiceovers in any language.', category: 'Audio', icon: <Mic className="text-orange-500" /> },
+    { id: 'seo', name: 'SEO Deep-Rank', desc: 'Generate high-ranking tags & descriptions.', category: 'SEO', icon: <BarChart3 className="text-red-500" /> },
+    { id: 'jumpcut', name: 'Pro Jump-Cut', desc: 'Remove silence & boring parts from videos.', category: 'Video', icon: <Zap className="text-yellow-500" /> }
   ];
 
-  const filteredTools = tools.filter(t => 
-    t.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const categories = ['All', 'Video', 'Text', 'Image', 'Audio', 'SEO'];
+
+  const filteredTools = proTools.filter(tool => {
+    const matchesCategory = selectedCategory === 'All' || tool.category === selectedCategory;
+    const matchesSearch = tool.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  // NEW: Function to talk to our Netlify Backend
+  const handleProcessAI = async () => {
+    if (!activeTool) return;
+    setIsLoading(true);
+    setAiResult(''); // Purana result clear karein
+
+    try {
+      const response = await fetch('/.netlify/functions/process', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          toolId: activeTool.id, 
+          prompt: "User Input" // Agle step mein textarea se connect karenge
+        })
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        setAiResult(data.data);
+      } else {
+        setAiResult("AI setup incomplete. Please check keys.");
+      }
+    } catch (error) {
+      setAiResult("Connection error. Ensure your site is live on Netlify.");
+    }
+    setIsLoading(false);
+  };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans overflow-x-hidden selection:bg-blue-500/30">
+    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-blue-500/30 overflow-x-hidden max-w-full">
       
-      {/* NAVBAR */}
-      <nav className="border-b border-white/5 bg-black/80 backdrop-blur-xl sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-7 bg-[#1a1a2e] flex items-center justify-center rounded-md border border-white/10 overflow-hidden shadow-[0_0_15px_rgba(56,189,248,0.1)]">
-               <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
-            </div>
-            <span className="text-2xl font-bold tracking-tight text-[#38bdf8]">ToolScout</span>
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-[100] bg-black/90 backdrop-blur-xl border-b border-white/5 h-16 px-6 flex justify-between items-center">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => {setActiveTool(null); setAiResult('');}}>
+          <div className="bg-blue-600 p-1.5 rounded-lg shadow-lg">
+            <Zap size={18} fill="white" />
           </div>
-          <div className="cursor-pointer group">
-            <Menu className="text-[#38bdf8] w-8 h-8 stroke-[1.5]" />
-          </div>
+          <span className="text-xl font-black tracking-tighter italic uppercase">TOOLSCOUT</span>
         </div>
+        <Menu className="text-gray-400" />
       </nav>
 
-      {/* HERO SECTION */}
-      <header className="relative pt-20 pb-20 px-6 text-center">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[700px] h-[350px] bg-blue-600/10 blur-[120px] rounded-full -z-10" />
+      <main className="pt-24 pb-20 px-4 md:px-6 max-w-6xl mx-auto box-border">
+        {!activeTool ? (
+          /* DASHBOARD VIEW */
+          <div className="animate-in fade-in duration-700">
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full mb-8">
+                <Sparkles size={14} className="text-blue-400" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 italic">20+ Pro AI Tools Ready</span>
+              </div>
+              <h1 className="text-4xl md:text-8xl font-black mb-6 tracking-tighter leading-[1.1] italic">
+                Find the perfect <br />
+                <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-blue-600 bg-clip-text text-transparent italic transition-all duration-500">
+                  AI {words[wordIndex]}
+                </span>
+              </h1>
+              <div className="relative max-w-2xl mx-auto mt-12 w-full px-2 box-border">
+                <Search className="absolute left-7 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
+                <input 
+                  type="text"
+                  placeholder="Search for tools..."
+                  className="w-full bg-[#0e0e0e] border border-white/10 rounded-3xl py-5 px-16 focus:outline-none focus:border-blue-600/50 text-base"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-wrap justify-center gap-2 mt-10">
+                {categories.map(cat => (
+                  <button key={cat} onClick={() => setSelectedCategory(cat)}
+                    className={`px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border ${selectedCategory === cat ? 'bg-blue-600 border-blue-600 text-white' : 'bg-white/5 border-white/10 text-gray-500 hover:bg-white/10'}`}>
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        <div className="flex flex-col items-center justify-center space-y-8 md:space-y-12 mb-14">
-          <h1 className="text-6xl md:text-[110px] font-black italic tracking-[-0.08em] leading-none text-white">Find the</h1>
-          <div className="text-4xl md:text-5xl font-medium text-white/30 lowercase tracking-[0.2em] italic leading-none">perfect</div>
-          
-          <div className="h-[80px] md:h-[130px] flex items-center justify-center relative">
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={words[index]}
-                initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -30, filter: "blur(10px)" }}
-                transition={{ duration: 0.5 }}
-                className="text-5xl md:text-[110px] font-black bg-clip-text text-transparent bg-gradient-to-b from-white via-blue-500 to-blue-800 tracking-[-0.08em] leading-none"
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {filteredTools.map(tool => (
+                <div key={tool.id} onClick={() => setActiveTool(tool)}
+                  className="group bg-[#0c0c0c] border border-white/5 rounded-[32px] p-8 hover:bg-[#111] hover:border-blue-500/50 transition-all cursor-pointer">
+                  <div className="mb-6 flex justify-between items-start">
+                    <div className="p-4 bg-black rounded-2xl border border-white/5">{tool.icon}</div>
+                    <div className="bg-white/5 px-3 py-1 rounded-full text-[9px] font-black text-gray-500 uppercase tracking-widest">{tool.category}</div>
+                  </div>
+                  <h3 className="text-2xl font-black mb-2 italic tracking-tight uppercase">{tool.name}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-8">{tool.desc}</p>
+                  <div className="flex items-center gap-2 text-[10px] font-black text-blue-500 uppercase tracking-widest italic group-hover:gap-4 transition-all">
+                    Open Workspace <ArrowRight size={14} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          /* WORKSPACE VIEW */
+          <div className="animate-in slide-in-from-bottom-4 duration-500">
+            <button onClick={() => {setActiveTool(null); setAiResult('');}} className="mb-8 text-gray-500 flex items-center gap-2 text-xs font-black uppercase tracking-widest">
+              <ArrowLeft size={16} /> Back to Library
+            </button>
+            <div className="bg-[#0c0c0c] border border-white/10 rounded-[40px] p-8 md:p-16">
+              <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter mb-4">{activeTool.name}</h2>
+              <p className="text-gray-500 text-lg mb-10">{activeTool.desc}</p>
+              
+              <div className="border-2 border-dashed border-white/10 rounded-[32px] p-12 text-center bg-black/40 hover:border-blue-500/50 transition-all cursor-pointer">
+                <Upload className="mx-auto mb-4 text-gray-600" size={48} />
+                <p className="font-black text-sm uppercase tracking-widest">Upload File</p>
+              </div>
+              
+              <button 
+                onClick={handleProcessAI}
+                disabled={isLoading}
+                className="w-full mt-10 bg-blue-600 hover:bg-blue-500 py-6 rounded-3xl font-black text-xl uppercase italic tracking-widest shadow-2xl transition-all active:scale-95 disabled:opacity-50"
               >
-                {words[index]}
-              </motion.span>
-            </AnimatePresence>
+                {isLoading ? 'Processing...' : <><Sparkles size={24} className="inline mr-2" /> Process with AI</>}
+              </button>
+
+              {/* AI Result Box */}
+              {aiResult && (
+                <div className="mt-8 p-6 bg-white/5 border border-blue-500/30 rounded-3xl animate-in fade-in slide-in-from-top-2">
+                  <h4 className="text-blue-500 font-black text-[10px] uppercase tracking-widest mb-2 italic">AI Result:</h4>
+                  <p className="text-gray-200 leading-relaxed font-mono text-sm">{aiResult}</p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-
-        {/* PILL BADGE (Positioned below dynamic text) */}
-        <div className="inline-flex items-center gap-3 bg-[#0f0f0f] border border-white/5 px-6 py-3 rounded-full shadow-2xl backdrop-blur-md">
-          <div className="w-3 h-3 bg-cyan-400 rounded-full shadow-[0_0_15px_#22d3ee]"></div>
-          <span className="text-[11px] uppercase tracking-[0.3em] font-bold text-gray-400">
-            The Ultimate AI Powerhouse for Creators
-          </span>
-        </div>
-
-        {/* SEARCH BAR */}
-        <div className="max-w-xl mx-auto mt-20 relative group px-4">
-          <Search className="absolute left-10 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-[#38bdf8]" size={20} />
-          <input 
-            type="text" 
-            placeholder="Search 20+ Pro Tools"
-            className="w-full bg-[#0c0c0c] border border-white/5 py-5 pl-16 pr-8 rounded-2xl text-lg text-white focus:outline-none focus:border-blue-500/20 shadow-2xl transition-all"
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </header>
-
-      {/* GRID (Full 20 Tools List) */}
-      <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 px-6 pb-40">
-        {filteredTools.map((tool) => (
-          <div key={tool.id} className="bg-[#0A0A0A] border border-white/5 p-8 rounded-[2.5rem] hover:border-blue-500/40 transition-all duration-500 group">
-            <tool.Icon className="text-blue-500 mb-6 group-hover:scale-110 transition-transform duration-500" size={32} />
-            <h3 className="text-xl font-bold mb-3 tracking-tight">{tool.name}</h3>
-            <p className="text-gray-500 text-sm leading-relaxed">{tool.desc}</p>
-          </div>
-        ))}
+        )}
       </main>
     </div>
   );
-};
-
-export default App;
-     
+                                                                                                                              }
+      
