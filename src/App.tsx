@@ -46,19 +46,21 @@ const App = () => {
       <header className="relative pt-32 pb-20 px-6 text-center">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[700px] h-[350px] bg-blue-600/10 blur-[120px] rounded-full -z-10" />
 
-        <h1 className="flex flex-col items-center justify-center text-center">
-          {/* Find the - Heavy Weight */}
-          <span className="text-6xl md:text-[100px] font-[900] italic tracking-[-0.08em] leading-[0.85] text-white">
+        {/* Heading Container with Flex Gap to prevent overlap */}
+        <h1 className="flex flex-col items-center justify-center text-center space-y-4">
+          
+          {/* 1. Find the */}
+          <span className="text-6xl md:text-[100px] font-[900] italic tracking-[-0.08em] leading-tight text-white">
             Find the
           </span>
 
-          {/* perfect - Elegant & Balanced (Ab chota nahi dikhega) */}
-          <span className="text-4xl md:text-5xl font-medium text-white/40 lowercase tracking-[0.1em] my-6 italic opacity-80">
+          {/* 2. perfect - Clearly visible separator */}
+          <span className="text-3xl md:text-5xl font-medium text-white/30 lowercase tracking-[0.15em] italic py-2">
             perfect
           </span>
           
-          {/* Dynamic Text - Gradient Impact */}
-          <div className="h-[1.1em] flex items-center justify-center relative">
+          {/* 3. Dynamic Text - Fixed Height and Margin for safety */}
+          <div className="h-[1.2em] flex items-center justify-center relative mt-4">
             <AnimatePresence mode="wait">
               <motion.span
                 key={words[index]}
@@ -66,7 +68,7 @@ const App = () => {
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 exit={{ opacity: 0, y: -30, filter: "blur(12px)" }}
                 transition={{ duration: 0.6, ease: "circOut" }}
-                className="text-6xl md:text-[100px] font-[900] bg-clip-text text-transparent bg-gradient-to-b from-white via-blue-500 to-blue-800 tracking-[-0.08em] leading-none drop-shadow-[0_15px_40px_rgba(59,130,246,0.4)]"
+                className="text-6xl md:text-[100px] font-[900] bg-clip-text text-transparent bg-gradient-to-b from-white via-blue-500 to-blue-800 tracking-[-0.08em] leading-none drop-shadow-[0_15px_40px_rgba(59,130,246,0.3)]"
               >
                 {words[index]}
               </motion.span>
@@ -75,7 +77,7 @@ const App = () => {
         </h1>
 
         {/* Search Bar */}
-        <div className="max-w-xl mx-auto mt-24 relative group px-4">
+        <div className="max-w-xl mx-auto mt-28 relative group px-4">
           <Search className="absolute left-10 top-1/2 -translate-y-1/2 text-gray-600" size={20} />
           <input 
             type="text" 
@@ -100,5 +102,6 @@ const App = () => {
   );
 };
 
-// Yeh export hona zaroori hai error se bachne ke liye
+// Error se bachne ke liye ye sabse zaroori hai
 export default App;
+        
