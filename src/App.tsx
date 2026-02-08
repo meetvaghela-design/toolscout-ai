@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Video, Youtube, Palette, Mic, TrendingUp, Search, Zap, ChevronRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion'; // Animation ke liye
+import { motion, AnimatePresence } from 'framer-motion';
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [index, setIndex] = useState(0);
 
-  // Video jaisa badalne wala text
+  // Changing words for the Hero section
   const words = ["AI Script Writer", "AI Video Editor", "SEO Expert", "Thumbnail Designer", "Content Planner"];
 
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % words.length);
-    }, 2500); // 2.5 seconds mein change hoga
+    }, 2500);
     return () => clearInterval(timer);
   }, []);
 
@@ -58,14 +58,13 @@ const App = () => {
           <div className="hidden md:flex gap-8 text-[12px] uppercase tracking-widest font-bold text-gray-400">
             <a href="#" className="hover:text-blue-500 transition">Tools</a>
             <a href="#" className="hover:text-blue-500 transition">Pricing</a>
-            <button className="bg-white text-black px-5 py-2 rounded-full text-xs hover:bg-blue-500 hover:text-white transition">Get Started</button>
+            <button className="bg-white text-black px-5 py-2 rounded-full text-xs font-bold hover:bg-blue-500 hover:text-white transition">Get Started</button>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section - VIDEO STYLE */}
+      {/* Hero Section */}
       <header className="relative pt-28 pb-20 px-6 text-center overflow-hidden">
-        {/* Background Glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-600/20 blur-[120px] rounded-full -z-10" />
 
         <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full mb-10">
@@ -74,20 +73,19 @@ const App = () => {
           </span>
         </div>
 
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[1.1]">
+        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight">
           <span className="italic block mb-2">Find the</span>
-          <span className="block mb-4 text-gray-300/50">perfect</span>
+          <span className="block mb-4 text-gray-500/50">perfect</span>
           
-          {/* Animated Text Part */}
-          <div className="h-[100px] flex justify-center items-center">
+          <div className="h-[1.2em] flex justify-center items-center overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.span
                 key={words[index]}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-blue-400 to-indigo-500 drop-shadow-[0_0_25px_rgba(59,130,246,0.5)]"
+                exit={{ opacity: 0, y: -30 }}
+                transition={{ duration: 0.5, ease: "circOut" }}
+                className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]"
               >
                 {words[index]}
               </motion.span>
@@ -95,7 +93,7 @@ const App = () => {
           </div>
         </h1>
 
-        {/* Search Bar - Video Style */}
+        {/* Search Bar */}
         <div className="max-w-2xl mx-auto mt-16 relative group">
           <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-500 transition-colors" size={24} />
           <input 
@@ -107,7 +105,7 @@ const App = () => {
         </div>
       </header>
 
-      {/* Filter Chips */}
+      {/* Categories */}
       <div className="flex justify-center gap-3 mb-16 flex-wrap px-4">
         {['All', 'Video', 'YouTube', 'Graphics', 'Audio', 'Growth'].map((cat) => (
           <button
@@ -120,7 +118,7 @@ const App = () => {
         ))}
       </div>
 
-      {/* Tool Cards Grid */}
+      {/* Grid */}
       <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-6 pb-40">
         {filteredTools.map((tool) => (
           <motion.div 
@@ -128,7 +126,7 @@ const App = () => {
             key={tool.id} 
             className="group bg-[#0A0A0A] border border-white/5 p-8 rounded-[2rem] hover:bg-[#111] hover:border-blue-500/50 transition-all duration-500 cursor-pointer relative overflow-hidden"
           >
-            <div className="text-blue-500 mb-6 group-hover:scale-110 group-hover:drop-shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all duration-500">
+            <div className="text-blue-500 mb-6 group-hover:scale-110 transition-all duration-500">
               {React.cloneElement(tool.icon as React.ReactElement, { size: 32 })}
             </div>
             <h3 className="text-xl font-bold text-white mb-3 tracking-tight">{tool.name}</h3>
