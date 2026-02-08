@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Video, Youtube, Palette, Mic, TrendingUp, Search, Zap, ChevronRight } from 'lucide-react';
+import { Video, Youtube, Palette, Mic, TrendingUp, Search, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeCategory, setActiveCategory] = useState('All');
   const [index, setIndex] = useState(0);
 
   const words = ["AI Script Writer", "AI Video Editor", "SEO Expert", "Thumbnail Designer"];
@@ -26,7 +25,6 @@ const App = () => {
   ];
 
   const filteredTools = tools.filter(t => 
-    (activeCategory === 'All' || t.cat === activeCategory) &&
     t.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -46,35 +44,35 @@ const App = () => {
       <header className="relative pt-32 pb-20 px-6 text-center">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[700px] h-[350px] bg-blue-600/10 blur-[120px] rounded-full -z-10" />
 
-        {/* Heading Container with Flex Gap to prevent overlap */}
-        <h1 className="flex flex-col items-center justify-center text-center space-y-4">
+        {/* Heading Container with Fixed Gaps to prevent Overlap */}
+        <div className="flex flex-col items-center justify-center space-y-8 md:space-y-12">
           
           {/* 1. Find the */}
-          <span className="text-6xl md:text-[100px] font-[900] italic tracking-[-0.08em] leading-tight text-white">
+          <h1 className="text-6xl md:text-[110px] font-black italic tracking-[-0.08em] leading-none text-white m-0 p-0">
             Find the
-          </span>
+          </h1>
 
-          {/* 2. perfect - Clearly visible separator */}
-          <span className="text-3xl md:text-5xl font-medium text-white/30 lowercase tracking-[0.15em] italic py-2">
+          {/* 2. perfect - Clearly Separated & Large */}
+          <div className="text-4xl md:text-5xl font-medium text-white/40 lowercase tracking-[0.2em] italic leading-none m-0 p-0">
             perfect
-          </span>
+          </div>
           
-          {/* 3. Dynamic Text - Fixed Height and Margin for safety */}
-          <div className="h-[1.2em] flex items-center justify-center relative mt-4">
+          {/* 3. Dynamic Text - Fixed Height Box to prevent overlap */}
+          <div className="h-[70px] md:h-[120px] flex items-center justify-center relative m-0 p-0">
             <AnimatePresence mode="wait">
               <motion.span
                 key={words[index]}
-                initial={{ opacity: 0, y: 30, filter: "blur(12px)" }}
+                initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -30, filter: "blur(12px)" }}
-                transition={{ duration: 0.6, ease: "circOut" }}
-                className="text-6xl md:text-[100px] font-[900] bg-clip-text text-transparent bg-gradient-to-b from-white via-blue-500 to-blue-800 tracking-[-0.08em] leading-none drop-shadow-[0_15px_40px_rgba(59,130,246,0.3)]"
+                exit={{ opacity: 0, y: -30, filter: "blur(10px)" }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="text-5xl md:text-[110px] font-black bg-clip-text text-transparent bg-gradient-to-b from-white via-blue-500 to-blue-800 tracking-[-0.08em] leading-none whitespace-nowrap drop-shadow-[0_15px_40px_rgba(59,130,246,0.3)]"
               >
                 {words[index]}
               </motion.span>
             </AnimatePresence>
           </div>
-        </h1>
+        </div>
 
         {/* Search Bar */}
         <div className="max-w-xl mx-auto mt-28 relative group px-4">
@@ -102,6 +100,5 @@ const App = () => {
   );
 };
 
-// Error se bachne ke liye ye sabse zaroori hai
 export default App;
-        
+              
