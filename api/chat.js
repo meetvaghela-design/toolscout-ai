@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   }
 
   const { prompt } = req.body;
-  const API_KEY = process.env.OPENAI_API_KEY; // Ab hum ye wali key Vercel mein daalenge
+  const API_KEY = process.env.OPENAI_API_KEY; 
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo", // Ya tum "gpt-4" bhi likh sakte ho agar access hai
+        model: "gpt-3.5-turbo", 
         messages: [{ role: "user", content: prompt }],
         temperature: 0.7
       })
