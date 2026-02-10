@@ -54,17 +54,28 @@ export default function App() {
     tool.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
+
     const userMsg = { role: 'user', content: input };
     setMessages(prev => [...prev, userMsg]);
+    const currentInput = input;
     setInput('');
     setIsLoading(true);
-    setTimeout(() => {
-      setMessages(prev => [...prev, { role: 'bot', content: `Bhai, main aapka ${activeTool.name} AI assistant hoon. Jald hi main live kaam karunga!` }]);
-      setIsLoading(false);
-    }, 1000);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: currentInput })
+      });
+      const result = await response.json();
+      setMessages(prev => [...prev, { role: 'bot', content: result.data || "Bhai, AI se jawab nahi mil paya. Key check karo!" }]);
+    } catch (error) {
+      setMessages(prev => [...prev, { role: 'bot', content: "Server Error: AI connected nahi h!" }]);
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -133,6 +144,13 @@ export default function App() {
                     </div>
                   </div>
                 ))}
+                {isLoading && (
+                  <div className="flex justify-start">
+                    <div className="bg-[#121212] border border-white/5 p-4 rounded-3xl animate-pulse text-blue-500 text-xs font-black uppercase tracking-widest">
+                      Toolscout AI is thinking...
+                    </div>
+                  </div>
+                )}
                 <div ref={chatEndRef} />
                </div>
             </div>
@@ -146,7 +164,7 @@ export default function App() {
                   placeholder={`Ask ${activeTool.name} anything...`} 
                   className="flex-1 bg-transparent py-4 px-6 focus:outline-none text-sm text-white" 
                 />
-                <button type="submit" className="p-4 bg-blue-600 rounded-2xl shadow-lg shadow-blue-600/20 mr-1">
+                <button type="submit" className="p-4 bg-blue-600 rounded-2xl shadow-lg shadow-blue-600/20 mr-1 disabled:opacity-50" disabled={isLoading}>
                   <Send size={20} />
                 </button>
               </form>
@@ -164,5 +182,5 @@ export default function App() {
       )}
     </div>
   );
-}
-  
+    }
+    
