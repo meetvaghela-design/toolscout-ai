@@ -4,22 +4,31 @@ export default async function handler(req, res) {
   }
 
   const { prompt } = req.body;
-  const API_KEY = process.env.GEMINI_API_KEY; // Ye hum Vercel mein set karenge
+  const API_KEY = process.env.OPENAI_API_KEY; // Ab hum ye wali key Vercel mein daalenge
 
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`
+      },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }]
+        model: "gpt-3.5-turbo", // Ya tum "gpt-4" bhi likh sakte ho agar access hai
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7
       })
     });
 
     const data = await response.json();
-    const aiResponse = data.candidates[0].content.parts[0].text;
     
+    if (data.error) {
+       return res.status(500).json({ error: data.error.message });
+    }
+
+    const aiResponse = data.choices[0].message.content;
     return res.status(200).json({ data: aiResponse });
   } catch (error) {
-    return res.status(500).json({ error: 'AI connect nahi ho pa raha h' });
+    return res.status(500).json({ error: 'OpenAI connect nahi ho pa raha h' });
   }
 }
