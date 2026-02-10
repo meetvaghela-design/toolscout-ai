@@ -1,19 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, Sparkles, Video, FileText, Image as ImageIcon, Mic, BarChart3, Menu, Zap, ArrowRight, X, ArrowLeft, Upload, Send, Paperclip, Info, Settings, Mail } from 'lucide-react';
+// Yahan humne tumhari 20 tools wali file ko import kiya h
+import toolsData from './data/directoryData.json';
+import { Tool } from './types';
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTool, setActiveTool] = useState(null);
+  const [activeTool, setActiveTool] = useState<any>(null);
   const [wordIndex, setWordIndex] = useState(0);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const chatEndRef = useRef(null);
+  const chatEndRef = useRef<null | HTMLDivElement>(null);
 
   const words = ['Video Editor', 'Script Writer', 'SEO Expert', 'Voice Artist', 'Thumbnail Designer'];
   
+  // Ab hum proTools variable ki jagah seedha toolsData use karenge
+  const allTools = toolsData;
+
   useEffect(() => {
     if (!activeTool) {
       const interval = setInterval(() => {
@@ -27,25 +33,13 @@ export default function App() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const proTools = [
-    { id: 'captions', name: 'Auto-Viral Captions', desc: 'Add influencer-style subtitles automatically.', category: 'Video', icon: <Video className="text-blue-500" /> },
-    { id: 'script', name: '1-Click Script Writer', desc: 'Viral scripts for YouTube, Reels & Ads.', category: 'Text', icon: <FileText className="text-purple-500" /> },
-    { id: 'upscale', name: '4K Image Upscaler', desc: 'Convert low-res photos to ultra-HD quality.', category: 'Image', icon: <ImageIcon className="text-green-500" /> },
-    { id: 'voice', name: 'Ultra-Human Voice', desc: 'Hyper-realistic AI voiceovers in any language.', category: 'Audio', icon: <Mic className="text-orange-500" /> },
-    { id: 'seo', name: 'SEO Deep-Rank', desc: 'Generate high-ranking tags & descriptions.', category: 'SEO', icon: <BarChart3 className="text-red-500" /> },
-    { id: 'thumbnail', name: 'Thumbnail AI', desc: 'Generate high-CTR thumbnails in seconds.', category: 'Image', icon: <ImageIcon className="text-pink-500" /> },
-    { id: 'repurpose', name: 'Video Repurpose', desc: 'Turn 1 YouTube video into 10 Reels/Shorts.', category: 'Video', icon: <Video className="text-cyan-500" /> }
-  ];
-
-  const categories = ['All', 'Video', 'Text', 'Image', 'Audio', 'SEO'];
-
-  const filteredTools = proTools.filter(tool => {
+  const filteredTools = allTools.filter(tool => {
     const matchesCategory = selectedCategory === 'All' || tool.category === selectedCategory;
     const matchesSearch = tool.name.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
-  const handleSendMessage = async (e) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
@@ -54,18 +48,10 @@ export default function App() {
     setInput('');
     setIsLoading(true);
 
-    try {
-      const response = await fetch('/api/process', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ toolId: activeTool.id, prompt: input })
-      });
-      const data = await response.json();
-      setMessages(prev => [...prev, { role: 'bot', content: data.data || "AI response received!" }]);
-    } catch (error) {
-      setMessages(prev => [...prev, { role: 'bot', content: "Server Error: AI not connected yet!" }]);
-    }
-    setIsLoading(false);
+    setTimeout(() => {
+      setMessages(prev => [...prev, { role: 'bot', content: `Bhai, abhi main server se connect nahi hoon, lekin aapne kaha: "${input}". Jald hi main live kaam karunga!` }]);
+      setIsLoading(false);
+    }, 1000);
   };
 
   return (
@@ -100,15 +86,23 @@ export default function App() {
               </h1>
               <div className="relative max-w-2xl mx-auto mt-12">
                 <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
-                <input type="text" placeholder="Search for tools..." className="w-full bg-[#0e0e0e] border border-white/10 rounded-3xl py-6 px-16 focus:outline-none focus:border-blue-600/50 text-base" onChange={(e) => setSearchTerm(e.target.value)} />
+                <input type="text" placeholder="Search for tools..." className="w-full bg-[#0e0e0e] border border-white/10 rounded-3xl py-6 px-16 focus:outline-none focus:border-blue-600/50 text-base shadow-2xl" onChange={(e) => setSearchTerm(e.target.value)} />
               </div>
             </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredTools.map(tool => (
-                <div key={tool.id} onClick={() => {setActiveTool(tool); setMessages([{role:'bot', content: `Bhai, main aapka ${tool.name} AI hoon. Batao kya help karun?`}]);}} className="group bg-[#0c0c0c] border border-white/5 rounded-[32px] p-8 hover:bg-[#111] hover:border-blue-600/50 transition-all cursor-pointer">
-                  <div className="mb-6">{tool.icon}</div>
+                <div key={tool.id} onClick={() => {setActiveTool(tool); setMessages([{role:'bot', content: `Bhai, main aapka ${tool.name} AI hoon. Batao kya help karun?`}]);}} className="group bg-[#0c0c0c] border border-white/5 rounded-[32px] p-8 hover:bg-[#111] hover:border-blue-600/50 transition-all cursor-pointer relative overflow-hidden">
+                  <div className="mb-6 bg-blue-600/10 w-fit p-4 rounded-2xl text-blue-500 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                    <Sparkles size={24} />
+                  </div>
                   <h3 className="text-2xl font-black mb-2 italic uppercase group-hover:text-blue-500">{tool.name}</h3>
-                  <p className="text-gray-500 text-sm">{tool.desc}</p>
+                  <p className="text-gray-500 text-sm mb-4">{tool.desc}</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">{tool.category}</span>
+                    <ArrowRight size={16} className="text-blue-600 opacity-0 group-hover:opacity-100 transition-all" />
+                  </div>
+                  {tool.pro && <div className="absolute top-6 right-6 text-[10px] font-black bg-blue-600 px-3 py-1 rounded-full uppercase italic">PRO</div>}
                 </div>
               ))}
             </div>
@@ -127,7 +121,7 @@ export default function App() {
                   <div className={`max-w-[80%] p-4 rounded-3xl text-sm ${msg.role === 'user' ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-white/5 text-gray-200 rounded-tl-none border border-white/5'}`}>{msg.content}</div>
                 </div>
               ))}
-              {isLoading && <div className="text-blue-500 text-[10px] font-bold italic animate-pulse px-2">TOOLSCOUT AI IS THINKING...</div>}
+              {isLoading && <div className="text-blue-500 text-[10px] font-bold italic animate-pulse px-2 uppercase">Toolscout AI is working...</div>}
               <div ref={chatEndRef} />
             </div>
             <form onSubmit={handleSendMessage} className="p-6 bg-black/40 border-t border-white/5">
@@ -140,6 +134,15 @@ export default function App() {
           </div>
         )}
       </main>
+      
+      {/* Footer added back for "Created by Meet" */}
+      {!activeTool && (
+        <footer className="py-12 px-6 border-t border-white/5 text-center">
+           <p className="text-gray-600 text-[10px] font-black uppercase tracking-[0.3em]">
+             Site Created by <span className="text-white">Meet</span>
+           </p>
+        </footer>
+      )}
     </div>
   );
-}
+                                                                         }
