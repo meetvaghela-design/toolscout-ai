@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   const API_KEY = process.env.MISTRAL_API_KEY;
 
   if (!API_KEY) {
-    return res.status(500).json({ data: "Server Error: Mistral Key nahi mili!" });
+    return res.status(500).json({ data: "Server Error: Mistral Key missing!" });
   }
 
   try {
@@ -18,21 +18,30 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${API_KEY}`
       },
       body: JSON.stringify({
-        model: "mistral-tiny", // Ye free tier ke liye best aur fast hai
-        messages: [{ role: "user", content: prompt }]
+        model: "mistral-tiny",
+        messages: [
+          { 
+            role: "system", 
+            content: "You are ToolScout AI, an authentic and witty AI collaborator. Your style is like Gemini: clear, concise, and grounded. Rule 1: Always answer in Hinglish (Hindi + English). Rule 2: Keep responses short. Rule 3: Use bold text for key points. Rule 4: Use bullet points for lists. Rule 5: No long paragraphs. Be a helpful peer, not a robot." 
+          },
+          { role: "user", content: prompt }
+        ],
+        max_tokens: 500 // Taaki bahut zyada lamba jawab na de
       })
     });
 
     const data = await response.json();
 
     if (data.choices && data.choices[0].message) {
-      const aiResponse = data.choices[0].message.content;
+      let aiResponse = data.choices[0].message.content;
+      
+      // Response ko clean aur formatted return kar rahe hain
       return res.status(200).json({ data: aiResponse });
     } else {
       return res.status(500).json({ data: "Mistral Error: " + (data.message || "No response") });
     }
 
   } catch (error) {
-    return res.status(500).json({ data: "Network Error: Mistral connect nahi ho raha!" });
+    return res.status(500).json({ data: "Network Error: AI se baat nahi ho pa rahi!" });
   }
-}
+      }
