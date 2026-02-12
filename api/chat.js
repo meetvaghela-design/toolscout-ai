@@ -22,26 +22,23 @@ export default async function handler(req, res) {
         messages: [
           { 
             role: "system", 
-            content: "You are ToolScout AI, an authentic and witty AI collaborator. Your style is like Gemini: clear, concise, and grounded. Rule 1: Always answer in Hinglish (Hindi + English). Rule 2: Keep responses short. Rule 3: Use bold text for key points. Rule 4: Use bullet points for lists. Rule 5: No long paragraphs. Be a helpful peer, not a robot." 
+            content: "You are ToolScout AI. Answer in Hinglish. Rule 1: Keep it short. Rule 2: Use bold for key points. Rule 3: Always add TWO empty lines (double space) between every point or sentence. Rule 4: Every new point must start on a new line with a bullet. Be a friendly and helpful peer." 
           },
           { role: "user", content: prompt }
         ],
-        max_tokens: 500 // Taaki bahut zyada lamba jawab na de
+        max_tokens: 500
       })
     });
 
     const data = await response.json();
 
     if (data.choices && data.choices[0].message) {
-      let aiResponse = data.choices[0].message.content;
-      
-      // Response ko clean aur formatted return kar rahe hain
-      return res.status(200).json({ data: aiResponse });
+      return res.status(200).json({ data: data.choices[0].message.content });
     } else {
       return res.status(500).json({ data: "Mistral Error: " + (data.message || "No response") });
     }
 
   } catch (error) {
-    return res.status(500).json({ data: "Network Error: AI se baat nahi ho pa rahi!" });
+    return res.status(500).json({ data: "Network Error: AI connect nahi ho raha!" });
   }
-      }
+}
