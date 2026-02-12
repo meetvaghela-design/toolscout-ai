@@ -60,7 +60,6 @@ export default function App() {
     const msg = { role: 'user', content: input, file: selectedFile };
     if(selectedFile?.type.startsWith('image/')) setGallery(p => [selectedFile, ...p]);
     const newMsgs = [...messages, msg]; setMessages(newMsgs); setInput(''); setSelectedFile(null); setIsLoading(true);
-    
     try {
       const res = await fetch('/api/chat', { method: 'POST', body: JSON.stringify({ prompt: input || "Asset Processing" }) });
       const r = await res.json();
@@ -72,12 +71,11 @@ export default function App() {
     } catch { setMessages(p => [...p, { role: 'bot', content: "Neural Link Error! Re-trying..." }]); }
     setIsLoading(false);
   };
-
-  return (
+      return (
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-blue-500/30">
       {deleteConfirmId && (
         <div className="fixed inset-0 z-[300] bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-[#121212] border border-white/10 p-8 rounded-[2rem] max-w-sm w-full">
+          <div className="bg-[#121212] border border-white/10 p-8 rounded-[2rem] max-w-sm w-full shadow-2xl">
             <h3 className="text-red-500 font-black mb-6 uppercase flex items-center gap-2 tracking-tighter"><AlertCircle/> Delete Neural History?</h3>
             <div className="flex gap-4">
               <button onClick={() => setDeleteConfirmId(null)} className="flex-1 py-4 bg-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest">No</button>
@@ -86,10 +84,9 @@ export default function App() {
           </div>
         </div>
       )}
-
       <div className={`fixed inset-y-0 left-0 z-[200] w-72 bg-[#080808] border-r border-white/5 transform transition-all duration-500 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6 h-full flex flex-col space-y-8">
-          <div className="flex justify-between items-center"><span className="font-black text-blue-500 uppercase italic tracking-tighter">Dashboard</span><X onClick={() => setIsMenuOpen(false)} className="cursor-pointer text-gray-500"/></div>
+          <div className="flex justify-between items-center"><span className="font-black text-blue-500 uppercase italic tracking-tighter">Dashboard</span><X onClick={() => setIsMenuOpen(false)} className="cursor-pointer text-gray-500 hover:text-white"/></div>
           <button onClick={() => { setActiveTool(null); setIsMenuOpen(false); }} className="w-full py-4 bg-blue-600 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20"><Plus size={16}/> New Neural Link</button>
           <div className="flex-1 overflow-y-auto space-y-8 no-scrollbar">
             <div>
@@ -106,7 +103,7 @@ export default function App() {
                 <p className="text-[10px] font-black text-gray-600 uppercase mb-4 tracking-[0.2em]">Media Vault</p>
                 <div className="grid grid-cols-3 gap-2">
                   {gallery.map((img, i) => (
-                    <div key={i} className="aspect-square rounded-lg overflow-hidden border border-white/10 group relative">
+                    <div key={i} className="aspect-square rounded-lg overflow-hidden border border-white/10 group relative shadow-lg">
                       <img src={img.url} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
                       <a href={img.url} download className="absolute inset-0 bg-blue-600/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all"><Download size={14}/></a>
                     </div>
@@ -117,15 +114,13 @@ export default function App() {
           </div>
         </div>
       </div>
-
-      <nav className="fixed top-0 w-full z-[100] bg-black/50 backdrop-blur-xl border-b border-white/5 h-16 px-6 flex justify-between items-center">
+           <nav className="fixed top-0 w-full z-[100] bg-black/50 backdrop-blur-xl border-b border-white/5 h-16 px-6 flex justify-between items-center">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveTool(null)}><Zap className="text-blue-600" fill="currentColor"/><span className="text-xl font-black italic uppercase tracking-tighter">TOOL<span className="text-blue-600">SCOUT</span></span></div>
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-blue-600/10 rounded-full border border-blue-600/20"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping"/><span className="text-[8px] font-black uppercase tracking-widest text-blue-500">System Online</span></div>
-          <Menu onClick={() => setIsMenuOpen(true)} className="text-gray-400 cursor-pointer hover:text-white"/>
+          <Menu onClick={() => setIsMenuOpen(true)} className="text-gray-400 cursor-pointer hover:text-white transition-colors"/>
         </div>
       </nav>
-
       <main className={`pt-24 pb-10 transition-all ${activeTool ? 'px-0' : 'px-6 max-w-6xl mx-auto'}`}>
         {!activeTool ? (
           <div className="text-center">
@@ -134,5 +129,50 @@ export default function App() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {allTools.filter(t => t.name.toLowerCase().includes(searchTerm.toLowerCase())).map(t => (
                 <div key={t.id} onClick={() => { setCurrentChatId(Date.now().toString()); setActiveTool(t); setMessages([{role:'bot', content: `Neural Engine Initialized: ${t.name} is ready for processing.`}]); }} className="bg-[#0c0c0c] border border-white/5 p-8 rounded-[2.5rem] hover:border-blue-600/50 cursor-pointer transition-all active:scale-95 group relative overflow-hidden">
-                   <div className="absolute top-0 right-0 p
-     
+                   <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-100 transition-opacity"><Cpu size={40} className="text-blue-600"/></div>
+                  <Sparkles className="text-blue-500 mb-6 group-hover:scale-125 transition-transform"/>
+                  <h3 className="text-2xl font-black uppercase italic leading-none">{t.name}</h3>
+                  <p className="text-gray-500 text-[9px] mt-4 font-black uppercase tracking-widest">{t.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col h-[calc(100vh-64px-4rem)]">
+            <div className="px-6 py-4 border-b border-white/5 flex items-center bg-black/40 backdrop-blur-md"><ArrowLeft onClick={() => setActiveTool(null)} className="mr-4 cursor-pointer text-gray-400 hover:text-white"/><h2 className="text-[11px] font-black uppercase text-blue-500 tracking-[0.2em]">{activeTool.name}</h2></div>
+            <div className="flex-1 overflow-y-auto p-4 md:p-12 space-y-8 no-scrollbar">
+              <div className="w-full max-w-3xl mx-auto space-y-8">
+                {messages.map((m, i) => (
+                  <div key={i} className={`flex ${m.role==='user'?'justify-end':'justify-start'}`}>
+                    <div className={`max-w-[85%] p-6 rounded-[2rem] text-sm ${m.role==='user'?'bg-blue-600 text-white rounded-tr-none shadow-blue-600/10':'bg-[#0c0c0c] border border-white/5 rounded-tl-none text-gray-200 shadow-xl'} whitespace-pre-line relative`}>
+                      {m.status && <div className="text-[7px] font-black uppercase text-blue-500 mb-2 tracking-widest">{m.status}</div>}
+                      {m.file && <div className="mb-4 rounded-xl overflow-hidden border border-white/10">{m.file.type.startsWith('image/') ? <img src={m.file.url} className="max-h-80 object-cover w-full shadow-lg"/> : <div className="p-4 flex items-center gap-2 bg-black/20 text-[10px] font-black uppercase tracking-tighter"><FileText size={16}/>{m.file.name}</div>}</div>}
+                      {m.content}
+                    </div>
+                  </div>
+                ))}
+                {isLoading && (
+                  <div className="flex items-center gap-3 p-4 bg-blue-600/5 border border-blue-600/20 rounded-2xl w-fit animate-pulse">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping"/><span className="text-[9px] font-black uppercase tracking-widest text-blue-500 italic">ToolScout Neural Engine Processing...</span>
+                  </div>
+                )}
+                <div ref={chatEndRef}/>
+              </div>
+            </div>
+            <div className="p-6 flex justify-center bg-gradient-to-t from-black to-transparent">
+              <div className="w-full max-w-2xl">
+                {selectedFile && <div className="mb-2 p-3 bg-[#0c0c0c] border border-blue-600/30 rounded-2xl flex justify-between text-[10px] font-black uppercase tracking-widest px-4 shadow-xl"><span>{selectedFile.name}</span><X size={14} onClick={() => setSelectedFile(null)} className="cursor-pointer"/></div>}
+                <form onSubmit={handleSendMessage} className="relative flex items-center gap-2 bg-[#0c0c0c] border border-white/10 rounded-full p-2 focus-within:border-blue-600 transition-all shadow-2xl">
+                  <input type="file" ref={fileInputRef} className="hidden" onChange={e => { const f = e.target.files[0]; if(f) setSelectedFile({name:f.name, type:f.type, url:URL.createObjectURL(f)}); }}/>
+                  <Paperclip className="p-2 cursor-pointer text-gray-500 hover:text-blue-500 transition-colors" size={36} onClick={() => fileInputRef.current.click()}/>
+                  <input value={input} onChange={e => setInput(e.target.value)} placeholder="Submit asset to ToolScout Engine..." className="flex-1 bg-transparent py-4 text-[11px] outline-none font-medium"/>
+                  <button type="submit" className="p-4 bg-blue-600 rounded-full hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all"><Send size={18}/></button>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+        }
